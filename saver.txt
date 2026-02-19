@@ -1,0 +1,153 @@
+class Pqueue {
+
+    private:
+
+        vector<double> heapQueue;
+        int size;
+
+    public:
+
+        Pqueue() {
+            size = 0;
+        }
+
+        //Function to insert an element into the Min heap priority quueu
+
+        void insert(double value) {
+
+            heapQueue.push_back(value);
+            size++;
+
+            int currentIndex = size - 1;
+
+            while (currentIndex > 0) {
+
+                int parentIndex = (currentIndex - 1) / 2;
+
+                if (heapQueue[currentIndex] < heapQueue[parentIndex]) {
+
+                    swap(heapQueue[currentIndex], heapQueue[parentIndex]);
+
+                    currentIndex = parentIndex;
+
+                } else {
+
+                    break;
+
+                }
+            }
+        }
+
+        //Function to remove and return the minimum element from the Min heap priority queue
+        double getTop() {
+
+            if (size == 0) {
+
+                cout<<"Priority Queue is empty" <<endl;
+
+                return -1;
+
+            }
+
+            double top = heapQueue[0];
+
+            heapQueue[0] = heapQueue[size - 1];
+
+            heapQueue.pop_back();
+
+            size--;
+
+            int currentIndex = 0;
+
+
+
+            while (true) {
+
+
+                int leftChildIndex = 2 * currentIndex + 1;
+                int rightChildIndex = 2 * currentIndex + 2;
+                int smallestIndex = currentIndex;
+
+                if (leftChildIndex < size && heapQueue[leftChildIndex] < heapQueue[smallestIndex]) {
+
+                    smallestIndex = leftChildIndex;
+
+                }
+
+                if (rightChildIndex < size && heapQueue[rightChildIndex] < heapQueue[smallestIndex]) {
+
+                    smallestIndex = rightChildIndex;
+
+                }
+
+                if (smallestIndex != currentIndex) {
+
+                    swap(heapQueue[currentIndex], heapQueue[smallestIndex]);
+
+                    currentIndex = smallestIndex;
+
+                } 
+                else {
+
+                    break;
+                }
+
+
+
+            }
+
+            return top;
+        }
+
+        int getSize() {
+
+            return size;
+
+        }
+    
+
+        
+
+};
+
+
+
+truct Node {
+    int arrivalTime;
+    int burstTime;
+    string name;
+};
+
+double generateInterval(int lambda, int mu, int M, int numOfEvents){
+    
+
+}
+
+
+class FifoQueue {
+    private:
+        vector <double> fifoQueue;
+    public:
+      
+        void insert(double value) {
+            fifoQueue.push_back(value);
+
+        }
+
+
+
+        double takeTop() {
+            if (fifoQueue.empty()) {
+                cout<<"FIFO Queue is empty" <<endl;
+                return -1;
+            }
+            double top = fifoQueue.front();
+            fifoQueue.erase(fifoQueue.begin());
+            return top;
+
+        }
+        int getSize() {
+            return fifoQueue.size();
+        }
+
+};
