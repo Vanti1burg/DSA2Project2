@@ -13,13 +13,19 @@
 #include "Pqueue.hpp"
 using namespace std;
 
+struct Event {
 
+    double time;
+
+    int type; // 0 for arrival, 1 for departure
+};
 class Pqueue {
 
     private:
 
-        vector<double> heapQueue;
+        vector<Event> heapQueue;
         int size;
+        int timePassed;
 
     public:
 
@@ -27,10 +33,11 @@ class Pqueue {
 
         //Function to insert an element into the Min heap priority quueu
 
-        void insert(double value);
+        void insert(Event newEvent);
 
         //Function to remove and return the minimum element from the Min heap priority queue
-        double getTop();
+        Event getTop();
+        Event peekTop();
 
         int getSize();
     

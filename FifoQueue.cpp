@@ -14,16 +14,16 @@ FifoQueue::FifoQueue() {
    
 }
 
-void FifoQueue::insert(double value) {
-    fifoQueue.push_back(value);
+void FifoQueue::insert(Event  newEvent) {
+    fifoQueue.push_back(newEvent);
 }
 
-double FifoQueue::takeTop() {
+Event FifoQueue::takeTop() {
     if (fifoQueue.empty()) {
         cout<<"FIFO Queue is empty" <<endl;
-        return -1;
+        return Event{-1, -1};
     }
-    double top = fifoQueue.front();
+    Event top = fifoQueue.front();
     fifoQueue.erase(fifoQueue.begin());
     return top;
 
@@ -31,4 +31,12 @@ double FifoQueue::takeTop() {
 
 int FifoQueue::getSize() {
     return fifoQueue.size();
+}
+
+Event FifoQueue::peekTop() {
+    if (fifoQueue.empty()) {
+        cout<<"FIFO Queue is empty" <<endl;
+        return Event{-1, -1};
+    }
+    return fifoQueue.front();
 }

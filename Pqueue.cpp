@@ -11,8 +11,8 @@
 #include "Pqueue.hpp"
 using namespace std;
 
-void Pqueue::insert(double value) {
-    heapQueue.push_back(value);
+void Pqueue::insert(Event newEvent) {
+    heapQueue.push_back(newEvent);
     size++;
 
     int currentIndex = size - 1;
@@ -21,7 +21,7 @@ void Pqueue::insert(double value) {
 
         int parentIndex = (currentIndex - 1) / 2;
 
-        if (heapQueue[currentIndex] < heapQueue[parentIndex]) {
+        if (heapQueue[currentIndex].time < heapQueue[parentIndex].time) {
 
             swap(heapQueue[currentIndex], heapQueue[parentIndex]);
 
@@ -39,17 +39,17 @@ Pqueue::Pqueue() {
     size = 0;
 }
 
-double Pqueue:: getTop() {
+Event Pqueue:: getTop() {
 
             if (size == 0) {
 
                 cout<<"Priority Queue is empty" <<endl;
 
-                return -1;
+                return Event{-1, -1};
 
             }
 
-            double top = heapQueue[0];
+            Event top = heapQueue[0];
 
             heapQueue[0] = heapQueue[size - 1];
 
@@ -68,13 +68,13 @@ double Pqueue:: getTop() {
                 int rightChildIndex = 2 * currentIndex + 2;
                 int smallestIndex = currentIndex;
 
-                if (leftChildIndex < size && heapQueue[leftChildIndex] < heapQueue[smallestIndex]) {
+                if (leftChildIndex < size && heapQueue[leftChildIndex].time < heapQueue[smallestIndex].time) {
 
                     smallestIndex = leftChildIndex;
 
                 }
 
-                if (rightChildIndex < size && heapQueue[rightChildIndex] < heapQueue[smallestIndex]) {
+                if (rightChildIndex < size && heapQueue[rightChildIndex].time < heapQueue[smallestIndex].time) {
 
                     smallestIndex = rightChildIndex;
 
@@ -105,3 +105,11 @@ int Pqueue::getSize() {
             return size;
 
         }
+
+Event Pqueue::peekTop() {
+    if (size == 0) {
+        cout<<"Priority Queue is empty" <<endl;
+        return Event{-1, -1};
+    }
+    return heapQueue[0];
+}        

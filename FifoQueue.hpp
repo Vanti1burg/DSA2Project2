@@ -10,7 +10,7 @@
 #include <random>
 #include <sstream>
 #include <fstream>
-
+#include "Pqueue.hpp"
 using namespace std;
 
 
@@ -27,14 +27,15 @@ struct Node {
 
 class FifoQueue {
     private:
-        vector <double> fifoQueue;
+        vector <Event> fifoQueue;
     public:
       
-        void insert(double value);
+        void insert(Event newEvent);
 
         FifoQueue();
 
-        double takeTop();
+        Event takeTop();
+        Event peekTop();
         int getSize();
 };
 
