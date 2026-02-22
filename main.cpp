@@ -9,171 +9,85 @@
 
 #include "Pqueue.hpp"
 #include "FifoQueue.hpp"
+#include "simulator.hpp"
 
 using namespace std;
 
 
-    int lambda =2;
-    int numProcesses= 50000;
-    int mu= 3;
-    int M= 2;
 
+int main() {
 
-    double totalIdleTime = 0.0;
-    double lastEventTime = 0.0;
-    double totalTimeInSystem=0.0;
-    int totalServers = 2;
-    int serversIdle = totalServers;
-    double totalTimeWaited=0;
+    int lambda1=0;
+    int numProcesses1= 0;
+    int mu1= 0;
+    int M1= 0;
+    int lambda2=0;
+    int numProcesses2= 0;
+    int mu2= 0;
+    int M2= 0;
 
+    ifstream inputFile("test1.txt");
+    ifstream inputFile2("test2.txt");
 
-    double generateArrivalTime(double timeAlreadyPassed) {
-
-        double time= timeAlreadyPassed;
-        double avg=1.0/lambda;
-        double arrivalTime = -avg * log(1.0 - (rand() / (RAND_MAX + 1.0)));
-        return arrivalTime+time;
-
+    if(!inputFile.is_open()){
+        cout<<"Error opening file!"<<endl;
+        return 1;
     }
 
+    inputFile >> lambda1 >> mu1 >> M1 >> numProcesses1;
+    inputFile2 >> lambda2 >> mu2 >> M2 >> numProcesses2;
+    inputFile.close();
+    inputFile2.close();
 
+     simulator sim(lambda1, numProcesses1, mu1, M1);
+     simulator sim2(lambda2, numProcesses2, mu2, M2);
+     cout<<"Test 1 Results: " <<endl;
+     cout<<endl;
+     sim.simulateQueueSystem(lambda1, numProcesses1, mu1, M1);
+     cout<<endl;
+     cout<<" VS. Projected Results for Test 1: " <<endl;
+     cout<<endl;
+     cout<<"Percent Idle Time : 0.5 or 50%"<<endl;
+     cout<<"Average time in system of : 0.375"<<endl;
+     cout<<"Average time waited of : 0.0417:"<<endl;
 
-
-    double generateDepartureTime(double timeAlreadyPassed) {
-
-        double avg=1.0/mu;
-        double timePassed= timeAlreadyPassed;
-        double serviceInterval = -avg * log(1.0 - (rand() / (RAND_MAX + 1.0)));
-        double departureTime=serviceInterval + timePassed;
-        return departureTime;
-
-    }
-
-    
-
-    int main () {
-
-        srand(time(0));
-        Pqueue priorityQueue;
-        FifoQueue fifo;
-
-        int processesCompleted=0;
-        int totalServersAvailable=M;
-        double time=0.0;
-
-        double totalTimeInSystem=0.0;
-        double totalTimeWaited=0.0;
-        int serversIdle=totalServersAvailable;
-        double totalIdleTime=0.0;
-        double lastEventTime=0.0;
-        int numOfJobsWaited=0;
-        double generationTime=0.0;
-        double totalTimeServersAvailable=0.0;
-        double totalBusyTime=0.0;
-       
-
-        while(processesCompleted < numProcesses) {
-            
-            if (priorityQueue.getSize() <=M+1){
-                for (int i=priorityQueue.getSize(); i<200;i++){
-                    Event newEvent;
-                    newEvent.time=generateArrivalTime(generationTime);
-                    newEvent.type=0;
-                    newEvent.arrivalTime=newEvent.time;
-                    priorityQueue.insert(newEvent);
-                    generationTime=newEvent.time;
-                }
-
-            }
-            
-            if (priorityQueue.peekTop().type==0 && totalServersAvailable>0){
-
-                if (serversIdle==M){
-                    totalIdleTime+= priorityQueue.peekTop().time - lastEventTime;
-                }
-               
-               
-                lastEventTime=priorityQueue.peekTop().time;
-                Event arrivalEvent = priorityQueue.getTop();
-                time=arrivalEvent.time;
-             
-                totalTimeWaited+=0;
-            
-                totalServersAvailable--;
-                serversIdle=totalServersAvailable;
-                arrivalEvent.departureTime=generateDepartureTime(arrivalEvent.time);
-                arrivalEvent.time=arrivalEvent.departureTime;
-                totalTimeInSystem+= arrivalEvent.departureTime - arrivalEvent.arrivalTime;
-             
-                
-                arrivalEvent.type=1;
-             
-                priorityQueue.insert(arrivalEvent);
-                
-                
-               
-            }
-            
-            if (priorityQueue.peekTop().type==0 && totalServersAvailable==0){
-
-                Event arrivalEvent= priorityQueue.getTop();
-                fifo.insert(arrivalEvent);
-                time=arrivalEvent.time;
-                numOfJobsWaited++;
-
-
-              
-            }
-
-
-            if (priorityQueue.peekTop().type==1){
-
-                Event departureEvent= priorityQueue.getTop();
-                totalServersAvailable++;
-                processesCompleted++;
-                time=departureEvent.time;
-               
-                serversIdle++;
-            
-
-                
-                if (fifo.getSize()>0){
-
-                    Event nextArrival=fifo.takeTop();
-                    nextArrival.time=departureEvent.time;
-                    totalTimeWaited+= departureEvent.time -nextArrival.arrivalTime;
-                    nextArrival.time=generateDepartureTime(nextArrival.time);
-                    nextArrival.type=1;
-                    totalTimeInSystem+= nextArrival.time - nextArrival.arrivalTime;
-                    nextArrival.departureTime=nextArrival.time;
-                    priorityQueue.insert(nextArrival);
-                    totalServersAvailable--;
-                    serversIdle--;
-
-                }
-               
-              
-                totalBusyTime+=(departureEvent.time - departureEvent.arrivalTime);
-
-            }
-        }
-
+     cout << "-----------------------------" << endl;
+     cout<<"Test 2 Results: " <<endl;
+     cout<<endl;
+     sim2.simulateQueueSystem(lambda2, numProcesses2, mu2, M2);
+     cout<<endl;
+     cout<<" VS. Projected Results for Test 2: " <<endl;
+     cout<<endl;
+     cout<<"Percent Idle Time : 0.43 or 43%"<<endl;
+     cout<<"Average time in the system of 0.16725"<<endl;
+     cout<<"Average time waited of : 0.000583"<<endl;
      
-    
-        double percentIdle = (totalIdleTime / (time * totalServers)) * 100.0;
-        double rho= totalBusyTime/(time*M);
-        cout<<"Total Idle Time" << totalIdleTime <<endl;
-        cout<<"Percentage of time servers were idle: " << percentIdle << "%" <<endl;
-        cout<<"Server Utilization (rho): " << rho <<endl;
-        
-
-        cout<<"Average time in system: "<< totalTimeInSystem*M/numProcesses<<endl;
-        cout<<"Average time waited: "<< totalTimeWaited/numOfJobsWaited<<endl;
-        cout<<"Percentage of jobs that had to wait: "<< (numOfJobsWaited/(double)numProcesses)*100.0<<"%"<<endl;
+   
+  
+  
+    return 0;
+}
 
 
 
-        return 0;
 
-     }
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
