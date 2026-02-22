@@ -14,10 +14,11 @@
 using namespace std;
 
 struct Event {
-
     double time;
-
-    int type; // 0 for arrival, 1 for departure
+    double arrivalTime = -1; 
+    double departureTime = -1;
+    int type; 
+    
 };
 class Pqueue {
 

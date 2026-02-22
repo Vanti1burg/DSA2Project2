@@ -14,11 +14,11 @@ using namespace std;
 
 
     int lambda =2;
-    int numProcesses= 50000;
+    int numProcesses= 5000;
     int mu= 3;
     int M= 2;
 
-
+    // For idle time tracking
     double totalIdleTime = 0.0;
     double lastEventTime = 0.0;
     double totalTimeInSystem=0.0;
@@ -66,50 +66,37 @@ using namespace std;
         int serversIdle=totalServersAvailable;
         double totalIdleTime=0.0;
         double lastEventTime=0.0;
-        int numOfJobsWaited=0;
-        double generationTime=0.0;
-        double totalTimeServersAvailable=0.0;
-        double totalBusyTime=0.0;
-       
 
         while(processesCompleted < numProcesses) {
             
             if (priorityQueue.getSize() <=M+1){
                 for (int i=priorityQueue.getSize(); i<200;i++){
                     Event newEvent;
-                    newEvent.time=generateArrivalTime(generationTime);
+                    newEvent.time=generateArrivalTime(time);
                     newEvent.type=0;
                     newEvent.arrivalTime=newEvent.time;
                     priorityQueue.insert(newEvent);
-                    generationTime=newEvent.time;
+                    time=newEvent.time;
                 }
 
             }
             
             if (priorityQueue.peekTop().type==0 && totalServersAvailable>0){
 
-                if (serversIdle==M){
-                    totalIdleTime+= priorityQueue.peekTop().time - lastEventTime;
-                }
-               
-               
-                lastEventTime=priorityQueue.peekTop().time;
+                
                 Event arrivalEvent = priorityQueue.getTop();
                 time=arrivalEvent.time;
              
                 totalTimeWaited+=0;
-            
+                totalIdleTime+=0; //no idle time as as soon as it arrives its served;
                 totalServersAvailable--;
                 serversIdle=totalServersAvailable;
                 arrivalEvent.departureTime=generateDepartureTime(arrivalEvent.time);
                 arrivalEvent.time=arrivalEvent.departureTime;
-                totalTimeInSystem+= arrivalEvent.departureTime - arrivalEvent.arrivalTime;
-             
+                cout<< "Process Arrival at time "<<arrivalEvent.arrivalTime<<endl;
                 
                 arrivalEvent.type=1;
-             
                 priorityQueue.insert(arrivalEvent);
-                
                 
                
             }
@@ -119,22 +106,17 @@ using namespace std;
                 Event arrivalEvent= priorityQueue.getTop();
                 fifo.insert(arrivalEvent);
                 time=arrivalEvent.time;
-                numOfJobsWaited++;
+                cout<<"Process Arrival at time " << arrivalEvent.time<<endl;
 
-
-              
             }
-
-
             if (priorityQueue.peekTop().type==1){
 
                 Event departureEvent= priorityQueue.getTop();
                 totalServersAvailable++;
                 processesCompleted++;
                 time=departureEvent.time;
-               
+                totalTimeInSystem+= departureEvent.departureTime - departureEvent.arrivalTime;
                 serversIdle++;
-            
 
                 
                 if (fifo.getSize()>0){
@@ -144,32 +126,25 @@ using namespace std;
                     totalTimeWaited+= departureEvent.time -nextArrival.arrivalTime;
                     nextArrival.time=generateDepartureTime(nextArrival.time);
                     nextArrival.type=1;
-                    totalTimeInSystem+= nextArrival.time - nextArrival.arrivalTime;
                     nextArrival.departureTime=nextArrival.time;
                     priorityQueue.insert(nextArrival);
                     totalServersAvailable--;
                     serversIdle--;
 
                 }
-               
-              
-                totalBusyTime+=(departureEvent.time - departureEvent.arrivalTime);
+                
 
             }
         }
 
      
-    
-        double percentIdle = (totalIdleTime / (time * totalServers)) * 100.0;
-        double rho= totalBusyTime/(time*M);
-        cout<<"Total Idle Time" << totalIdleTime <<endl;
-        cout<<"Percentage of time servers were idle: " << percentIdle << "%" <<endl;
-        cout<<"Server Utilization (rho): " << rho <<endl;
-        
+
+    double percentIdle = (totalIdleTime / (time * totalServers)) * 100.0;
+        cout<<"Percent Idel Time for the servers: "<< percentIdle<<"%"<<endl;
 
         cout<<"Average time in system: "<< totalTimeInSystem*M/numProcesses<<endl;
-        cout<<"Average time waited: "<< totalTimeWaited/numOfJobsWaited<<endl;
-        cout<<"Percentage of jobs that had to wait: "<< (numOfJobsWaited/(double)numProcesses)*100.0<<"%"<<endl;
+        cout<<"Average time waited: "<< totalTimeWaited/numProcesses<<endl;
+        
 
 
 

@@ -17,23 +17,13 @@ using namespace std;
 
 
 
-struct Node {
-    int arrivalTime;
-    int burstTime;
-    string name;
-};
-
-
 
 class FifoQueue {
     private:
         vector <Event> fifoQueue;
     public:
-      
         void insert(Event newEvent);
-
         FifoQueue();
-
         Event takeTop();
         Event peekTop();
         int getSize();
