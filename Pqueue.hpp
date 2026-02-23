@@ -13,6 +13,10 @@
 #include "Pqueue.hpp"
 using namespace std;
 
+
+
+//class header file for priority queue class 
+//also stores the event struct that is used to create the events for simulation
 struct Event {
     double time;
     double arrivalTime = -1; 
@@ -32,11 +36,12 @@ class Pqueue {
 
         Pqueue();
 
-        //Function to insert an element into the Min heap priority quueu
+        //Function to insert an element into the min heap priority quueu
 
         void insert(Event newEvent);
 
-        //Function to remove and return the minimum element from the Min heap priority queue
+        //Function to remove and return the first element from the Min heap priority queue
+
         Event getTop();
         Event peekTop();
 

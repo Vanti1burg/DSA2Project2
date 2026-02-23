@@ -13,6 +13,10 @@
 #include "FifoQueue.hpp"
 
 
+//This is the class header file for the simulator class
+//not much is needed to know about this file except for the public variables that are used to store
+//statistical values
+
 using namespace std;
 
 class simulator {
@@ -23,6 +27,11 @@ class simulator {
         void simulateQueueSystem( int lambda, int numProcesses, int mu, int M);
         double generateArrivalTime(double timeAlreadyPassed);
         double generateDepartureTime(double timeAlreadyPassed);
+        double avgTimeWaited=0.0;
+        double percentIdleTime=0.0;
+        double averageTimeInSystem=0.0;
+        double chanceOfWaiting=0.0;
+        double rho=0.0;
     private:
         int lambda =0;
         int numProcesses= 0;
@@ -34,6 +43,7 @@ class simulator {
         int totalServers = 2;
         int serversIdle = totalServers;
         double totalTimeWaited=0;
+       
 
 };
 

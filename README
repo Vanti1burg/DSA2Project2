@@ -1,0 +1,22 @@
+# DSA2Project2
+
+this is the read me file for project two of the DSA2
+the purpose of this program is to simulate a queuing sytem given different parameters that influence
+the statistical data of a queuing system such as the average time waited, percent idle time, and other statistical
+data points that are required to be simulated and found in the project description
+The program runs by itself and just needs to be put into a linux environment and stored together
+use the command "make main" to create the objects for execution and "./main" to run the program and see the results in the terminal
+The program uses a min heap queue as a scheduler and a fifo queue as a stand in for a "line" for "customer" or "events" to wait
+To summarize the important steps for user interaction with this program are as follows
+
+step 1: Load this folder into a linux environment
+step 2: Navigating into the directory with the terminal once inside you can run the "make main" command to generate the executables for the program to run
+step 3: simply type into the terminal "./main" to run the program, this is a hands off program that only requires you to start it as it will finsh on its own
+step 4: compare simulation results to mathematical results found through statistical models
+
+
+Thank you for reading
+
+
+
+

@@ -16,7 +16,7 @@ using namespace std;
 
  
 
-
+//header file for fifoQueue class that is used as a "line" for events in the simulator
 
 class FifoQueue {
     private:
